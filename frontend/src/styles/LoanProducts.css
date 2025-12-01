@@ -1,0 +1,132 @@
+.loan-products-page {
+  min-height: 100vh;
+}
+
+.products-hero {
+  min-height: 400px;
+  background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.products-hero .hero-overlay {
+  display: none;
+}
+
+.products-hero .hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.products-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.products-hero p {
+  font-size: 1.2rem;
+  opacity: 0.95;
+}
+
+.filter-container {
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.filter-container h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #0F766E;
+  color: #0F766E;
+}
+
+.filter-btn.active {
+  background: #0F766E;
+  border-color: #0F766E;
+  color: white;
+}
+
+.results-count {
+  color: #6b7280;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.loan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 35px;
+  margin-top: 40px;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.no-results {
+  text-align: center;
+  padding: 80px 20px;
+  color: #6b7280;
+}
+
+.no-results p {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .products-hero h1 {
+    font-size: 2rem;
+  }
+
+  .products-hero {
+    min-height: 300px;
+  }
+
+  .filter-buttons {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .loan-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
