@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import '../styles/ApplyNow.css';
@@ -10,8 +10,28 @@ const ApplyNow = () => {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [loanProducts, setLoanProducts] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState('');
+
+  useEffect(() => {
+    // Fetch available loan products
+    const fetchLoanProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/loan-products');
+        setLoanProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching loan products:', error);
+      }
+    };
+    fetchLoanProducts();
+  }, []);
 
   const onSubmit = async (data) => {
+    if (!selectedProductId) {
+      alert('Please select a loan product');
+      return;
+    }
+
     setSubmitting(true);
     try {
       const response = await axios.post('http://localhost:5000/api/applications', {
@@ -28,6 +48,7 @@ const ApplyNow = () => {
           zipCode: data.zipCode
         },
         loanDetails: {
+          productId: selectedProductId,
           loanAmount: data.loanAmount,
           loanTerm: data.loanTerm,
           purpose: data.loanPurpose
@@ -55,7 +76,7 @@ const ApplyNow = () => {
       }, 3000);
     } catch (error) {
       console.error('Error submitting application:', error);
-      alert('Error submitting application. Please try again.');
+      alert(error.response?.data?.message || 'Error submitting application. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -192,6 +213,23 @@ const ApplyNow = () => {
             {step === 2 && (
               <div className="form-step">
                 <h2>Loan Details</h2>
+
+                <div className="form-group">
+                  <label>Select Loan Product *</label>
+                  <select 
+                    value={selectedProductId} 
+                    onChange={(e) => setSelectedProductId(e.target.value)}
+                    className={!selectedProductId ? 'input-error' : ''}
+                  >
+                    <option value="">Choose a Loan Product</option>
+                    {loanProducts.map(product => (
+                      <option key={product._id} value={product._id}>
+                        {product.productName} - {product.interestRate}% APR
+                      </option>
+                    ))}
+                  </select>
+                  {!selectedProductId && step === 2 && <span className="error-text">Please select a loan product</span>}
+                </div>
 
                 <div className="form-group">
                   <label>Desired Loan Amount *</label>

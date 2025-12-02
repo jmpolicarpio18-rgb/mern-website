@@ -62,11 +62,14 @@ function AdminApplications() {
   const handleUpdateApplication = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/api/admin/applications/${selectedApp._id}`, {
+      const result = await axios.put(`http://localhost:5000/api/admin/applications/${selectedApp._id}`, {
         status: appStatus,
         notes
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       setSelectedApp(null);
@@ -75,7 +78,8 @@ function AdminApplications() {
       fetchApplications();
       alert('Application updated successfully!');
     } catch (err) {
-      alert('Failed to update application');
+      console.error('Error updating application:', err);
+      alert(err.response?.data?.message || 'Failed to update application');
     }
   };
 

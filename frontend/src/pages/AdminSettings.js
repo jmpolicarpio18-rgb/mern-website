@@ -60,12 +60,18 @@ function AdminSettings() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put('http://localhost:5000/api/admin/settings', settings, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.put('http://localhost:5000/api/admin/settings', settings, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
       setMessage('Settings saved successfully!');
+      // Update settings with response data
+      setSettings(response.data.settings || settings);
     } catch (err) {
-      setMessage('Failed to save settings');
+      console.error('Error saving settings:', err);
+      setMessage(err.response?.data?.message || 'Failed to save settings');
     } finally {
       setSaving(false);
     }

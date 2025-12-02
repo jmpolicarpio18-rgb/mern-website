@@ -32,8 +32,7 @@ const applicationSchema = new mongoose.Schema({
   loanDetails: {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'LoanProduct',
-      required: true
+      ref: 'LoanProduct'
     },
     loanAmount: {
       type: Number,
@@ -43,7 +42,13 @@ const applicationSchema = new mongoose.Schema({
       type: Number,
       required: true
     },
-    purpose: String
+    purpose: String,
+    status: {
+      type: String,
+      enum: ['Pending', 'Under Review', 'Approved', 'Rejected'],
+      default: 'Pending'
+    },
+    notes: String
   },
 
   // Property/Collateral Information

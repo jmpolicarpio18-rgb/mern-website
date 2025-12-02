@@ -54,11 +54,14 @@ function AdminContacts() {
   const handleUpdateContact = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/api/admin/contacts/${selectedContact._id}`, {
+      const result = await axios.put(`http://localhost:5000/api/admin/contacts/${selectedContact._id}`, {
         status,
         response
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       setSelectedContact(null);
@@ -67,7 +70,8 @@ function AdminContacts() {
       fetchContacts();
       alert('Contact updated successfully!');
     } catch (err) {
-      alert('Failed to update contact');
+      console.error('Error updating contact:', err);
+      alert(err.response?.data?.message || 'Failed to update contact');
     }
   };
 
