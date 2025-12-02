@@ -1,30 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { useSettings } from '../context/SettingsContext';
 import '../styles/ApplyNow.css';
 
 const ApplyNow = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'onBlur'
   });
+  const { settings, refetch: refetchSettings } = useSettings();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loanProducts, setLoanProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState('');
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     // Fetch available loan products
-    const fetchLoanProducts = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/loan-products');
-        setLoanProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching loan products:', error);
-      }
-    };
     fetchLoanProducts();
+    // Refresh every 30 seconds to get admin updates
+    const interval = setInterval(fetchLoanProducts, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const fetchLoanProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/loan-products');
+      setLoanProducts(response.data);
+      setLoadingProducts(false);
+      console.log('Loan products:', response.data);
+    } catch (error) {
+      console.error('Error fetching loan products:', error);
+      setLoadingProducts(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     if (!selectedProductId) {
@@ -219,16 +229,26 @@ const ApplyNow = () => {
                   <select 
                     value={selectedProductId} 
                     onChange={(e) => setSelectedProductId(e.target.value)}
-                    className={!selectedProductId ? 'input-error' : ''}
+                    className={!selectedProductId && step === 2 ? 'input-error' : ''}
+                    disabled={loadingProducts}
                   >
-                    <option value="">Choose a Loan Product</option>
-                    {loanProducts.map(product => (
-                      <option key={product._id} value={product._id}>
-                        {product.productName} - {product.interestRate}% APR
-                      </option>
-                    ))}
+                    <option value="">
+                      {loadingProducts ? 'Loading products...' : 'Choose a Loan Product'}
+                    </option>
+                    {loanProducts && loanProducts.length > 0 ? (
+                      loanProducts.map(product => (
+                        <option key={product._id} value={product._id}>
+                          {product.name} - {product.interestRate.min}% - {product.interestRate.max}% APR
+                        </option>
+                      ))
+                    ) : (
+                      !loadingProducts && <option disabled>No loan products available</option>
+                    )}
                   </select>
                   {!selectedProductId && step === 2 && <span className="error-text">Please select a loan product</span>}
+                  {!loadingProducts && loanProducts.length === 0 && (
+                    <span className="error-text">No loan products available. Please contact support.</span>
+                  )}
                 </div>
 
                 <div className="form-group">
