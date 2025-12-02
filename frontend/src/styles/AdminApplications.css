@@ -1,0 +1,51 @@
+/* Import shared styles from AdminContacts.css for consistency */
+@import url('./AdminContacts.css');
+
+.status-pending {
+  border-left-color: #ff9800;
+}
+
+.status-under-review {
+  border-left-color: #2196f3;
+}
+
+.status-approved {
+  border-left-color: #4caf50;
+}
+
+.status-rejected {
+  border-left-color: #f44336;
+}
+
+tbody tr.status-pending .status-badge {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+tbody tr.status-under-review .status-badge {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+tbody tr.status-approved .status-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+tbody tr.status-rejected .status-badge {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.tab-content h3 {
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.tab-content h3:first-child {
+  margin-top: 0;
+}
